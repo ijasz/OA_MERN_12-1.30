@@ -1,4 +1,5 @@
 import "./_home.scss";
+import investing from "../../assets/images/investing.svg";
 
 export const Home = () => {
   return (
@@ -15,11 +16,7 @@ export const Home = () => {
             <div className="btn btn-primary">Get Started</div>
           </div>
           <div className="col">
-            <img
-              src="https://preview.colorlib.com/theme/imagine/images/undraw_investing_7u74.svg"
-              alt="img"
-              width="100%"
-            />
+            <img src={investing} alt="img" width="100%" />
           </div>
         </div>
       </div>
