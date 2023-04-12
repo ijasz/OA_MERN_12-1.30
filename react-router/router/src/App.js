@@ -1,14 +1,30 @@
-import { Route, Routes, Link, Outlet } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  Link,
+  Outlet,
+  NavLink,
+  useParams,
+} from "react-router-dom";
 import "./_app.scss";
 
 export function App() {
   return (
     <div className="App">
       <nav>
-        <Link to="">Home</Link>
-        <Link to="about">About</Link>
-        <Link to="contact">Contact</Link>
-        <Link to="courses">Courses</Link>
+        <NavLink
+          to=""
+          style={({ isActive }) => {
+            return {
+              fontWeight: isActive && "bold",
+            };
+          }}
+        >
+          Home
+        </NavLink>
+        <NavLink to="about">About</NavLink>
+        <NavLink to="contact">Contact</NavLink>
+        <NavLink to="courses">Courses</NavLink>
       </nav>
 
       <Routes>
@@ -16,7 +32,9 @@ export function App() {
         <Route path="/about" Component={About} />
         <Route path="/contact" Component={Contact} />
         <Route path="/courses" Component={Courses}>
-          <Route path="online" Component={Online} />
+          <Route path="online" Component={Online}>
+            <Route path="course-details/:id" Component={CoursesDetails} />
+          </Route>
           <Route path="offline" Component={Offline} />
         </Route>
       </Routes>
@@ -49,10 +67,10 @@ export function Courses() {
     <main className="flex-col">
       <section className="d-flex justify-content-center my-5">
         <li className="mx-2">
-          <Link to="online">Online Courses</Link>
+          <NavLink to="online">Online Courses</NavLink>
         </li>
         <li className="mx-2">
-          <Link to="offline">Offline Courses</Link>
+          <NavLink to="offline">Offline Courses</NavLink>
         </li>
       </section>
       <section className="my-2">
@@ -66,9 +84,19 @@ export function Online() {
   return (
     <div>
       <h1>Online courses</h1>
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>JS</li>
+      <section className="d-flex">
+        <Link to="course-details/html" className="mx-1">
+          HTML
+        </Link>
+        <Link to="course-details/css" className="mx-1">
+          CSS
+        </Link>
+        <Link to="course-details/js" className="mx-1">
+          JS
+        </Link>
+      </section>
+
+      <Outlet />
     </div>
   );
 }
@@ -81,4 +109,41 @@ export function Offline() {
       <li>React Native</li>
     </div>
   );
+}
+
+const courses = [
+  {
+    id: "html",
+    courseName: "HTML",
+    courseDuration: "1hr",
+    courseFee: "500",
+  },
+  {
+    id: "css",
+    courseName: "CSS",
+    courseDuration: "5hr",
+    courseFee: "600",
+  },
+  {
+    id: "js",
+    courseName: "JavaScript",
+    courseDuration: "8hr",
+    courseFee: "1000",
+  },
+];
+
+export function CoursesDetails() {
+  const { id } = useParams();
+
+  return courses.map((data, i, arr) => {
+    if (id === data.id)
+      return (
+        <div className="my-3">
+          <h1>CoursesDetails {id} </h1>
+          <li>courseName : {data.courseName}</li>
+          <li>courseFee: {data.courseFee}</li>
+          <li>courseDuration: {data.courseDuration}</li>
+        </div>
+      );
+  });
 }
