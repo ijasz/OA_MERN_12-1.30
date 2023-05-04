@@ -7,9 +7,11 @@ const {
   updateStudentById,
 } = require("../controllers/student-controller");
 
-router.get("/get", getAllStudents);
+// CRUD
+
 router.post("/add", addStudent);
-router.delete("/delete-all", deleteAllStudents);
+router.get("/get", getAllStudents);
 router.put("/:id", updateStudentById);
+router.delete("/delete-all", deleteAllStudents);
 
 module.exports = router;

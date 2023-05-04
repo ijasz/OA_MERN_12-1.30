@@ -6,4 +6,6 @@ const studentsRoutes = require("./src/students/routes/students-route");
 app.use(express.json());
 app.use("/student", studentsRoutes);
 
+app.get("", (req, res) => res.send("Welcome to Student backend API"));
+
 app.listen(5000, () => console.log("started server at 5000"));
