@@ -11,7 +11,7 @@ const {
 
 router.post("/add", addStudent);
 router.get("/get", getAllStudents);
-router.put("/:id", updateStudentById);
-router.delete("/delete-all", deleteAllStudents);
+// router.put("/:id", updateStudentById);
+// router.delete("/delete-all", deleteAllStudents);
 
 module.exports = router;

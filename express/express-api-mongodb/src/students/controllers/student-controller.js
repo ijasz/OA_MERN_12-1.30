@@ -1,5 +1,5 @@
+const student = require("../models/student-model");
 const studentModel = require("../models/student-model");
-const students = [];
 
 exports.addStudent = async (req, res, next) => {
   console.log("add student");
@@ -13,18 +13,24 @@ exports.addStudent = async (req, res, next) => {
   }
 };
 
-exports.getAllStudents = (req, res, next) => {
-  res.send(students);
+exports.getAllStudents = async (req, res, next) => {
+  try {
+    const data = await student.find();
+    if (data.length !== 0) res.send(data);
+    else res.send("students not found");
+  } catch (error) {
+    res.send(error);
+  }
 };
 
-exports.deleteAllStudents = (req, res, next) => {
-  students.length = 0;
-  res.send("deleted all data");
-};
+// exports.deleteAllStudents = (req, res, next) => {
+//   students.length = 0;
+//   res.send("deleted all data");
+// };
 
-exports.updateStudentById = (req, res, next) => {
-  console.log(req.params);
-};
+// exports.updateStudentById = (req, res, next) => {
+//   console.log(req.params);
+// };
 
 // module.exports = {
 //   addStudent: (req, res, next) => {
