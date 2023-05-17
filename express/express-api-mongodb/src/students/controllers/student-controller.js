@@ -1,4 +1,3 @@
-const student = require("../models/student-model");
 const studentModel = require("../models/student-model");
 
 exports.addStudent = async (req, res, next) => {
@@ -23,14 +22,25 @@ exports.getAllStudents = async (req, res, next) => {
   }
 };
 
-// exports.deleteAllStudents = (req, res, next) => {
-//   students.length = 0;
-//   res.send("deleted all data");
-// };
+exports.getStudentById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const data = await studentModel.findById(id);
+    res.send(data);
+  } catch (error) {
+    res.status(404).json({ message: "please check your id" });
+  }
+};
 
-// exports.updateStudentById = (req, res, next) => {
-//   console.log(req.params);
-// };
+exports.deleteOneDoc = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const data = await studentModel.findByIdAndDelete(id);
+    res.status(200).json({ id: data.id, message: `deleted successfully` });
+  } catch (error) {
+    res.status(404).json({ message: "please check your id" });
+  }
+};
 
 // module.exports = {
 //   addStudent: (req, res, next) => {

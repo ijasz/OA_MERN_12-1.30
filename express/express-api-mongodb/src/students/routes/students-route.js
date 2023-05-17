@@ -2,16 +2,16 @@ const express = require("express");
 const router = express.Router();
 const {
   addStudent,
-  deleteAllStudents,
+  deleteOneDoc,
   getAllStudents,
-  updateStudentById,
+  getStudentById,
 } = require("../controllers/student-controller");
 
 // CRUD
 
 router.post("/add", addStudent);
+router.get("/:id", getStudentById);
 router.get("/get", getAllStudents);
-// router.put("/:id", updateStudentById);
-// router.delete("/delete-all", deleteAllStudents);
+router.delete("/:id", deleteOneDoc);
 
 module.exports = router;
