@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const studentsRoutes = require("./src/students/routes/students-route");
 const mongoose = require("./src/db/db");
+const cors = require("cors");
 
 const db = mongoose.connection;
 
@@ -11,6 +12,7 @@ db.once("open", function () {
 });
 
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use("/student", studentsRoutes);
 

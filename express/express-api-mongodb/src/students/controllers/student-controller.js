@@ -1,6 +1,6 @@
 const studentModel = require("../models/student-model");
 
-exports.addStudent = async (req, res, next) => {
+exports.addStudentDoc = async (req, res, next) => {
   console.log("add student");
   const student = new studentModel(req.body);
 
@@ -8,13 +8,24 @@ exports.addStudent = async (req, res, next) => {
     await student.save();
     res.json({ status: 200 });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ error: "Failed to create student" });
   }
 };
 
-exports.getAllStudents = async (req, res, next) => {
+exports.addManyStudentDoc = async (req, res, next) => {
+  console.log("added Many students");
   try {
-    const data = await student.find();
+    await studentModel.insertMany(req.body);
+    res.json({ status: 200 });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create student" });
+  }
+};
+
+exports.getAllStudentsDoc = async (req, res, next) => {
+  console.log("get all");
+  try {
+    const data = await studentModel.find({});
     if (data.length !== 0) res.send(data);
     else res.send("students not found");
   } catch (error) {
@@ -22,7 +33,8 @@ exports.getAllStudents = async (req, res, next) => {
   }
 };
 
-exports.getStudentById = async (req, res, next) => {
+exports.getOneStudentDoc = async (req, res, next) => {
+  console.log("get one");
   const { id } = req.params;
   try {
     const data = await studentModel.findById(id);
@@ -32,11 +44,22 @@ exports.getStudentById = async (req, res, next) => {
   }
 };
 
-exports.deleteOneDoc = async (req, res, next) => {
+exports.deleteOneStudentDoc = async (req, res, next) => {
   const { id } = req.params;
   try {
     const data = await studentModel.findByIdAndDelete(id);
     res.status(200).json({ id: data.id, message: `deleted successfully` });
+  } catch (error) {
+    res.status(404).json({ message: "please check your id" });
+  }
+};
+
+exports.updateOneStudentDoc = async (req, res, next) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  try {
+    const data = await studentModel.findByIdAndUpdate(id, updateData);
+    res.status(200).json({ id: data.id, message: `Updated Successfully` });
   } catch (error) {
     res.status(404).json({ message: "please check your id" });
   }

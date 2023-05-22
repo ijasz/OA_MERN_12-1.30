@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const {
-  addStudent,
-  deleteOneDoc,
-  getAllStudents,
-  getStudentById,
+  addStudentDoc,
+  deleteOneStudentDoc,
+  getAllStudentsDoc,
+  getOneStudentDoc,
+  updateOneStudentDoc,
+  addManyStudentDoc,
 } = require("../controllers/student-controller");
 
 // CRUD
 
-router.post("/add", addStudent);
-router.get("/:id", getStudentById);
-router.get("/get", getAllStudents);
-router.delete("/:id", deleteOneDoc);
+router.post("/add", addStudentDoc);
+router.post("/addManyDoc", addManyStudentDoc);
+router.get("/get", getAllStudentsDoc);
+router.get("/:id", getOneStudentDoc);
+router.delete("/:id", deleteOneStudentDoc);
+router.put("/:id", updateOneStudentDoc);
 
 module.exports = router;
