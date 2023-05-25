@@ -1,0 +1,16 @@
+.dialog-box {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 90%;
+  padding: 50px;
+  max-width: 400px;
+  background-color: white;
+  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.326);
+}
+
+.dialog-box-open {
+  display: block;
+}

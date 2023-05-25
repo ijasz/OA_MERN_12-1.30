@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
 import "./App.css";
 import axios from "axios";
+import { MyDialogBox } from "./Component/DialogBox";
 
-function List({ data }) {
+function List({ data, deleteFunc, editFunc }) {
   return (
     <>
       <section className="d-flex justify-content-between my-3">
@@ -10,6 +13,15 @@ function List({ data }) {
         <article className="w-25 text-center">{data.firstname}</article>
         <article className="w-25 text-center">{data.lastname}</article>
         <article className="w-25 text-center">{data.age}</article>
+        <article className="w-25 text-center" onClick={editFunc.bind("", data)}>
+          <AiOutlineEdit />
+        </article>
+        <article
+          className="w-25 text-center pe-auto"
+          onClick={deleteFunc.bind("", data)}
+        >
+          <AiOutlineDelete />
+        </article>
       </section>
     </>
   );
@@ -18,10 +30,12 @@ function List({ data }) {
 export const App = () => {
   const [student, setStudent] = useState([]);
   const [createStudent, setCreateStudent] = useState({
+    id: "",
     firstname: "",
     lastname: "",
     age: 0,
   });
+  const [currentData, setCurentData] = useState("");
 
   const today = new Date();
   const doc = window.document;
@@ -56,8 +70,35 @@ export const App = () => {
 
   const daymonth = daylist[day] + "," + " " + monthlist[month] + " " + date;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  const getData = () => {
+    axios
+      .get("http://localhost:5000/student/get")
+      .then((response) => {
+        console.log(response.data);
+        setStudent(response.data);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const deleteStudent = async (data) => {
+    await axios
+      .delete(`http://localhost:5000/student/${data._id}`)
+      .then((res) => {
+        console.log(res.data, "response");
+        getData();
+      });
+  };
+
+  const editStudent = (data) => {
+    const doc = document;
+    setCurentData(data);
+    console.log(data, "data-------");
+    doc.querySelector(".dialog-box").classList.add("dialog-box-open");
+    console.log(doc.querySelector(".dialog-box"));
+  };
+
+  const updateTime = () => {
+    return setInterval(() => {
       const today = new Date();
       const hr = today.getHours();
       const min = today.getMinutes();
@@ -67,18 +108,11 @@ export const App = () => {
       )}</span> hr: <span style="font-size: 20px;">${min}</span> min : <span style="font-size: 20px;">${sec}</span> sec`;
       document.getElementById("time").innerHTML = time;
     }, 1000);
+  };
 
-    axios
-      .get("http://localhost:5000/student/get")
-      .then((response) => {
-        console.log(response.data);
-        setStudent(response.data);
-        // console.log(response.status);
-        // console.log(response.statusText);
-        // console.log(response.headers);
-        // console.log(response.config);
-      })
-      .catch((e) => console.log(e));
+  useEffect(() => {
+    const interval = updateTime();
+    getData();
 
     return () => clearInterval(interval);
   }, []);
@@ -107,6 +141,7 @@ export const App = () => {
     }).then((res) => {
       console.log(res.data);
       setStudent([...student, createStudent]);
+      setCreateStudent({ firstname: "", lastname: "", age: "" });
     });
   };
 
@@ -123,6 +158,7 @@ export const App = () => {
             placeholder="Firstname"
             className="m-1"
             name="firstname"
+            value={createStudent.firstname}
             onChange={updateField}
           />
           <input
@@ -130,6 +166,7 @@ export const App = () => {
             placeholder="Lastname"
             name="lastname"
             className="m-1"
+            value={createStudent.lastname}
             onChange={updateField}
           />
           <input
@@ -137,6 +174,7 @@ export const App = () => {
             placeholder="Age"
             name="age"
             className="m-1"
+            value={createStudent.age}
             onChange={updateField}
           />
           <button className="addBtn" onClick={createStudentFunc}>
@@ -146,7 +184,7 @@ export const App = () => {
       </section>
       <hr />
       <h3 className="text-center">
-        Students List {JSON.stringify(createStudent)}
+        Students List {JSON.stringify(currentData)}
       </h3>
       <hr />
       <section className="d-flex justify-content-between">
@@ -154,11 +192,19 @@ export const App = () => {
         <h6 className="w-25 text-center">Firstname</h6>
         <h6 className="w-25 text-center">Lastname</h6>
         <h6 className="w-25 text-center">Age</h6>
+        <h6 className="w-25 text-center">Edit</h6>
+        <h6 className="w-25 text-center">Delete</h6>
       </section>
       <hr />
-      {student.map((data) => (
-        <List data={data} />
+      {student.map((data, index) => (
+        <List
+          key={index}
+          data={data}
+          editFunc={editStudent}
+          deleteFunc={deleteStudent}
+        />
       ))}
+      <MyDialogBox data={currentData} />
     </main>
   );
 };

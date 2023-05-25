@@ -1,10 +1,10 @@
 const express = require("express");
+const mongoose = require("./src/db/db");
+const db = mongoose.connection;
+
+const cors = require("cors");
 const app = express();
 const studentsRoutes = require("./src/students/routes/students-route");
-const mongoose = require("./src/db/db");
-const cors = require("cors");
-
-const db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", function () {
