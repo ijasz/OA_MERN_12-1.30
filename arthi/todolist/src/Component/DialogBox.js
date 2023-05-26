@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import "./_dialogBoxStyle.scss";
+import axios from "axios";
 
 export const MyDialogBox = ({ data }) => {
-  const [editStudent, setEditStudent] = useState({
-    id: data._id,
+  const [student, setStudent] = useState({
     firstname: data.firstname,
     lastname: data.lastname,
     age: data.age,
   });
+
+  console.log(data, "got--------------");
+  console.log(student, "--------------");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,17 +21,32 @@ export const MyDialogBox = ({ data }) => {
     doc.querySelector(".dialog-box").classList.remove("dialog-box-open");
   };
 
+  const updateStudent = () => {
+    axios
+      .put(`http://localhost:5000/student/add/${data._id}`, student)
+      .then((response) => {
+        //  setPost(response.data);
+      });
+  };
+
+  const updateField = (e) => {
+    // setCreateStudent({ ...createStudent, [e.target.name]: e.target.value });
+    console.log(e.target.name);
+    console.log(e.target.value);
+  };
+
   return (
     <main className="dialog-box">
       <form onSubmit={handleSubmit}>
         <div className="form-group my-3">
+          <p>{JSON.stringify(student)}</p>
           <label htmlFor="firstName">First Name:</label>
           <input
             type="text"
             className="form-control"
             id="firstName"
-            value={data.firstname}
-            // onChange={(e) => setFirstName(e.target.value)}
+            value={student.firstname}
+            onChange={updateField}
           />
         </div>
 
@@ -38,8 +56,8 @@ export const MyDialogBox = ({ data }) => {
             type="text"
             className="form-control"
             id="lastName"
-            value={data.lastname}
-            // onChange={(e) => setLastName(e.target.value)}
+            value={student.lastname}
+            onChange={updateField}
           />
         </div>
 
@@ -49,12 +67,16 @@ export const MyDialogBox = ({ data }) => {
             type="text"
             className="form-control"
             id="age"
-            value={data.age}
-            // onChange={(e) => setAge(e.target.value)}
+            value={student.age}
+            onChange={updateField}
           />
         </div>
 
-        <button type="submit" className="btn btn-primary mx-1">
+        <button
+          type="submit"
+          className="btn btn-primary mx-1"
+          onChange={updateStudent}
+        >
           Submit
         </button>
         <button
